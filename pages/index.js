@@ -1,6 +1,6 @@
 function Home(){
     return(
-        <h1> Amor, se você gostou da uma risadinha</h1>
+        <h1> Amor, se você gostou da uma risadinha!</h1>
     )
 }
 
