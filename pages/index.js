@@ -8,12 +8,4 @@ function Home() {
   );
 }
 
-function ela() {
-  <h1>ola</h1>;
-}
-
-function teste() {
-  console.log("asdasasas");
-}
-
 export default Home; //Exportando como padrão a janela Home.
