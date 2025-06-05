@@ -1,7 +1,7 @@
 services:
   database:
-    image: 'postgres:16.0-alpine3.18'
-    environment:
-      POSTGRES_PASSWORD: "123"
+    image: "postgres:16.0-alpine3.18"
+    env_file:
+      - ../.env #Acessando o password do banco de dados através do arquivo .env (onde estão as variáveis de ambiente).
     ports:
       - "5432:5432"
