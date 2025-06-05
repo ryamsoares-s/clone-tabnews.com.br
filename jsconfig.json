@@ -1,3 +1,5 @@
+// Define a raiz do projeto;
+
 {
   "compilerOptions": {
     "baseUrl": "."
