@@ -8,15 +8,16 @@ async function query(queryObject) {
     database: process.env.POSTGRES_DB, // ACESSANDO A VARIÁVEL DE AMBIENTE
     password: process.env.POSTGRES_PASSWORD, // ACESSANDO A VARIÁVEL DE AMBIENTE
   });
-  await client.connect();
 
   try {
-    // Tenta executar a consulta no banco de dados
+    // Tenta conectar ao banco de dados
+    await client.connect();
     const result = await client.query(queryObject);
     return result;
   } catch (error) {
     // Se ocorrer um erro, ele será capturado aqui
     console.error("Database query error:", error);
+    throw error; // Lança o erro para que possa ser tratado onde a função for chamada
   } finally {
     // Independentemente de ter ocorrido um erro ou não, o cliente será desconectado
     await client.end();
