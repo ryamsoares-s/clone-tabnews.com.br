@@ -7,7 +7,7 @@ async function query(queryObject) {
     user: process.env.POSTGRES_USER, // ACESSANDO A VARIÁVEL DE AMBIENTE
     database: process.env.POSTGRES_DB, // ACESSANDO A VARIÁVEL DE AMBIENTE
     password: process.env.POSTGRES_PASSWORD, // ACESSANDO A VARIÁVEL DE AMBIENTE
-    ssl: process.env.NODE_ENV ? false : true, // Habilita SSL para conexões seguras
+    ssl: process.env.NODE_ENV === "development" ? false : true, // Habilita SSL para conexões seguras
   });
 
   try {
