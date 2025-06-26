@@ -1,3 +1,55 @@
+/**
+ * @swagger
+ * /api/v1/migrations:
+ *   get:
+ *     summary: Lista migrações pendentes do banco de dados
+ *     description: Retorna as migrações pendentes sem aplicá-las (dry run).
+ *     responses:
+ *       200:
+ *        description: Migrações pendentes.
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                type: object
+ *                properties:
+ *                  path:
+ *                    type: string
+ *                    example: "infra/migrations/1750267961053_teste-migration.js"
+ *                  name:
+ *                    type: string
+ *                    example: "1750267961053_teste-migration"
+ *                  timestamp:
+ *                    type: string
+ *                    format: date-time
+ *                    nullable: true
+ *                    example: "1750267961053"
+ *
+ *   post:
+ *     summary: Executa migrações pendentes do banco de dados
+ *     description: Executa as migrações pendentes e retorna o resultado.
+ *     responses:
+ *       201:
+ *         description: Migrações aplicadas.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       200:
+ *         description: Nenhuma migração pendente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       405:
+ *         description: Método não permitido.
+ */
+
 import migrationRunner from "node-pg-migrate";
 import { join } from "node:path";
 import database from "infra/database.js";
@@ -14,6 +66,11 @@ export default async function migrations(request, response) {
     verbose: true, // Ativa o modo verboso para logs detalhados
     migrationsTable: "pgmigrations", // Nome da tabela onde as migrações são registradas
   };
+
+  if (request.method !== "GET" && request.method !== "POST") {
+    await dbclient.end(); // Fecha a conexão com o banco de dados
+    return response.status(405).end(); // Retorna 405 se o método não for GET ou POST
+  }
 
   if (request.method === "GET") {
     const pendingMigrations = await migrationRunner(defaultMigrationsOptions);
@@ -34,5 +91,4 @@ export default async function migrations(request, response) {
     }
     return response.status(200).json(migratedMigrations); // Retorna 200 OK com as migrações pendentes
   }
-  return response.status(405).end(); // Método não permitido, retorna 405
 }
