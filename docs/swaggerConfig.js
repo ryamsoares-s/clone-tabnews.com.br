@@ -19,11 +19,6 @@ switch (environment) {
     baseUrl.url = `http://localhost:${port}/api/v1`; // URL base da API em desenvolvimento
     baseUrl.description = "Ambiente de Desenvolvimento";
     break;
-  case "staging":
-    baseUrl.url =
-      "https://clone-tabnews-com-br-git-staging-playryam-gmailcoms-projects.vercel.app/api/v1"; // URL base da API em staging
-    baseUrl.description = "Ambiente de Staging";
-    break;
   default:
     baseUrl.url = "http://localhost:3000/api/v1"; // URL base da API em desenvolvimento
     baseUrl.description = "Ambiente de Desenvolvimento";
@@ -43,6 +38,11 @@ const options = {
       {
         url: baseUrl.url, // URL base da API
         description: baseUrl.description, // Descrição do ambiente
+      },
+
+      {
+        url: "https://clone-tabnews-com-br-git-staging-playryam-gmailcoms-projects.vercel.app/api/v1", // URL base da API em staging
+        description: "Ambiente de Staging",
       },
     ],
   },
