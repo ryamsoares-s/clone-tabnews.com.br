@@ -10,7 +10,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000/api/v1", // URL base da API
+        url: "https://clone-tabnews-com-br-git-main-playryam-gmailcoms-projects.vercel.app/api/v1", // URL base da API
         description: "Servidor de Desenvolvimento",
       },
     ],
