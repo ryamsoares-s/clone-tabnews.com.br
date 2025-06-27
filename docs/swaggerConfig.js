@@ -21,7 +21,7 @@ switch (environment) {
     break;
   case "staging":
     baseUrl.url =
-      "https://clone-tabnews-com-br-git-fix-80c8f2-playryam-gmailcoms-projects.vercel.app/api/v1"; // URL base da API em staging
+      "https://clone-tabnews-com-br-git-staging-playryam-gmailcoms-projects.vercel.app/api/v1"; // URL base da API em staging
     baseUrl.description = "Ambiente de Staging";
     break;
   default:
