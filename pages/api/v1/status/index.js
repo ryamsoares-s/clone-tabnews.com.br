@@ -1,3 +1,38 @@
+/**
+ * @swagger
+ * /api/v1/status:
+ *   get:
+ *     summary: Retorna o status do sistema e informações do banco de dados
+ *     description: Fornece informações sobre a data/hora da última atualização e detalhes do banco de dados, como versão, conexões abertas e máximo de conexões.
+ *     responses:
+ *       200:
+ *         description: Status do sistema e informações do banco de dados.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 updated_at:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2025-06-24T12:34:56.789Z"
+ *                 dependencies:
+ *                   type: object
+ *                   properties:
+ *                     database:
+ *                       type: object
+ *                       properties:
+ *                         version:
+ *                           type: string
+ *                           example: "15.3"
+ *                         max_connections:
+ *                           type: integer
+ *                           example: 100
+ *                         opened_connections:
+ *                           type: integer
+ *                           example: 5
+ */
+
 import database from "infra/database.js"; // Importa a função que conecta com o banco de dados
 
 async function status(request, response) {
