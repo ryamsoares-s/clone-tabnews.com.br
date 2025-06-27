@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/v1/migrations:
+ * /migrations:
  *   get:
  *     summary: Lista migrações pendentes do banco de dados
  *     description: Retorna as migrações pendentes sem aplicá-las (dry run).
