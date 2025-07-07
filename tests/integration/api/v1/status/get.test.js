@@ -1,3 +1,11 @@
+import orchestrator from "tests/orchestrator.js";
+
+// Executa antes de todos os testes
+beforeAll(async () => {
+  // Aguarda todos os serviços necessários estarem prontos antes de iniciar os testes
+  await orchestrator.waitForAllServices();
+});
+
 test("GET to /api/v1/status should return 200", async () => {
   const response = await fetch("http://localhost:3000/api/v1/status");
   expect(response.status).toBe(200);

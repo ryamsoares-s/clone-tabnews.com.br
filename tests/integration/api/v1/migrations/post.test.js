@@ -1,9 +1,12 @@
 import database from "infra/database.js";
+import orchestrator from "tests/orchestrator.js";
 
-beforeAll(cleanDatabase);
-async function cleanDatabase() {
+beforeAll(async () => {
+  // Aguarda todos os serviços necessários estarem prontos antes de iniciar os testes
+  await orchestrator.waitForAllServices();
   await database.query("drop schema public cascade; create schema public;");
-}
+  // Remove todo o schema 'public' (incluindo todas as tabelas e objetos) e recria o schema 'public' do zero no banco de dados
+});
 
 test("POST to /api/v1/migrations should return 200", async () => {
   const response = await fetch("http://localhost:3000/api/v1/migrations", {
