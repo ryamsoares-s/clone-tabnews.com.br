@@ -1,0 +1,18 @@
+name: Linting
+
+on: pull_request # Quando alguém criar um pull_request rode os jobs abaixo;
+
+jobs:
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-latest # define o SO que rodará o workflow
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/hydrogen"
+
+      - run: npm ci # Faz as intalações do package-lock.json assim como o `npm install`, no entanto ele não às atualiza!
+
+      - run: npm run lint:prettier:check
