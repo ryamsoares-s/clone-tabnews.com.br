@@ -4,10 +4,10 @@ on: pull_request # Quando alguém criar um pull_request rode os jobs abaixo;
 
 jobs:
   jest:
-    name: Jest Ubunto
-    runs-on: ubunto-latest # define o SO que rodará o workflow
+    name: Jest Ubuntu
+    runs-on: ubuntu-latest # define o SO que rodará o workflow
     steps:
-      - uses: action/checkout@v4
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
