@@ -21,6 +21,8 @@ async function waitForAllServices() {
   }
 }
 
-export default {
+const orchestrator = {
   waitForAllServices, // Exporta a função para ser usada em outros arquivos
 };
+
+export default orchestrator;
