@@ -53,7 +53,6 @@
 import migrationRunner from "node-pg-migrate";
 import { join } from "node:path";
 import database from "infra/database.js";
-import db from "node-pg-migrate/dist/db";
 
 export default async function migrations(request, response) {
   const allowedMethods = ["GET", "POST"]; // Métodos permitidos para esta rota

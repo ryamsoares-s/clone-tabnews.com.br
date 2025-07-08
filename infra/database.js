@@ -32,10 +32,12 @@ async function getNewClient() {
   return client; // Retorna o cliente conectado para uso posterior
 }
 
-export default {
+const database = {
   query, // Exporta a função de consulta para ser usada em outros módulos
   getNewClient, // Exporta a função para criar um novo cliente
 };
+
+export default database;
 
 function getSSLValues() {
   if (process.env.POSTGRES_CA) {
