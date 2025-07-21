@@ -41,7 +41,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "lts/hydrogen"
+          node-version: "lts/hydrogen" # Define a versão do Node.js a ser usada
 
       - run: npm ci # Faz as intalações do package-lock.json assim como o `npm install`, no entanto ele não às atualiza!
 
