@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-        fetch-depth: 0 # Necessário para que o commitlint consiga comparar os commits do PR
+          fetch-depth: 0 # Necessário para que o commitlint consiga comparar os commits do PR
 
       - uses: actions/setup-node@v4
         with:
