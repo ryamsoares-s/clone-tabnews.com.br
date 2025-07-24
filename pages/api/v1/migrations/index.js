@@ -51,7 +51,7 @@
  */
 
 import migrationRunner from "node-pg-migrate";
-import { join } from "node:path";
+import { resolve } from "node:path";
 import database from "infra/database.js";
 
 export default async function migrations(request, response) {
@@ -70,7 +70,7 @@ export default async function migrations(request, response) {
     const defaultMigrationsOptions = {
       dbClient: dbClient, // Cliente de banco de dados para executar as migrações
       dryRun: true, // define uma execução dry run(teste)
-      dir: join("infra", "migrations"), // Diretório onde as migrações estão localizadas
+      dir: resolve("infra", "migrations"), // Diretório onde as migrações estão localizadas
       // O Join é usado para garantir que o caminho seja resolvido corretamente, independentemente do sistema operacional
       direction: "up", // Direção da migração, "up" para aplicar as migrações
       verbose: true, // Ativa o modo verboso para logs detalhados
