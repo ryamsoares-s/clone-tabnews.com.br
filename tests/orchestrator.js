@@ -1,4 +1,5 @@
 import retry from "async-retry"; // Importa a biblioteca para tentar executar funções assíncronas várias vezes em caso de falha
+import database from "infra/database.js"; // Importa o módulo de banco de dados para executar consultas SQL
 
 // Função principal que aguarda todos os serviços necessários estarem prontos
 async function waitForAllServices() {
@@ -21,8 +22,15 @@ async function waitForAllServices() {
   }
 }
 
+async function clearDatabase() {
+  // Limpa o banco de dados antes de iniciar os testes
+  await database.query("drop schema public cascade; create schema public;");
+  // Remove todo o schema 'public' (incluindo todas as tabelas e objetos) e recria o schema 'public' do zero no banco de dados
+}
+
 const orchestrator = {
   waitForAllServices, // Exporta a função para ser usada em outros arquivos
+  clearDatabase, // Exporta a função para limpar o banco de dados
 };
 
 export default orchestrator;
