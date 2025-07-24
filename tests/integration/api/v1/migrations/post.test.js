@@ -1,11 +1,9 @@
-import database from "infra/database.js";
 import orchestrator from "tests/orchestrator.js";
 
 beforeAll(async () => {
   // Aguarda todos os serviços necessários estarem prontos antes de iniciar os testes
   await orchestrator.waitForAllServices();
-  await database.query("drop schema public cascade; create schema public;");
-  // Remove todo o schema 'public' (incluindo todas as tabelas e objetos) e recria o schema 'public' do zero no banco de dados
+  await orchestrator.clearDatabase(); // Limpa o banco de dados antes de iniciar os testes
 });
 
 describe("POST /api/v1/migrations", () => {
