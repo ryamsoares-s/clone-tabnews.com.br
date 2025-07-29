@@ -11,7 +11,7 @@ export default function StatusPage() {
     refreshInterval: 2000,
   });
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return (
       <>
         <h1>Status</h1>
@@ -23,33 +23,29 @@ export default function StatusPage() {
   return (
     <>
       <h1>Status</h1>
-      <UpdatedAt updatedAt={data.updated_at} />
+      <Updated_at updatedAt={data.updated_at} />
 
-      <h1>Database</h1>
-      <Version version={data.dependencies.database.version} />
-      <MaxConnections
+      <h2>Database</h2>
+      <DatabaseStatus
+        version={data.dependencies.database.version}
         maxConnections={data.dependencies.database.max_connections}
-      />
-      <OpenedConnections
         openedConnections={data.dependencies.database.opened_connections}
       />
     </>
   );
 }
 
-function UpdatedAt({ updatedAt }) {
+function Updated_at({ updatedAt }) {
   const updatedAtText = new Date(updatedAt).toLocaleString();
-  return <div> Última atualização: {updatedAtText}</div>;
+  return <div>Última atualização: {updatedAtText}</div>;
 }
 
-function Version({ version }) {
-  return <div> Versão do banco de dados: {version}</div>;
-}
-
-function MaxConnections({ maxConnections }) {
-  return <div> Máximo de conexões: {maxConnections}</div>;
-}
-
-function OpenedConnections({ openedConnections }) {
-  return <div> Conexões abertas: {openedConnections}</div>;
+function DatabaseStatus({ version, maxConnections, openedConnections }) {
+  return (
+    <div>
+      <div>Versão do banco de dados: {version}</div>
+      <div>Máximo de conexões: {maxConnections}</div>
+      <div>Conexões abertas: {openedConnections}</div>
+    </div>
+  );
 }
