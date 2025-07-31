@@ -10,11 +10,11 @@ async function query(queryObject) {
     return result;
   } catch (error) {
     // Se ocorrer um erro, ele será capturado aqui
-    console.error("Database query error:", error);
+    console.error("Erro dentro do catch do database.js:", error);
     throw error; // Lança o erro para que possa ser tratado onde a função for chamada
   } finally {
     // Independentemente de ter ocorrido um erro ou não, o cliente será desconectado
-    await client.end();
+    await client?.end();
   }
 }
 
