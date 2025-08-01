@@ -1,5 +1,4 @@
 import { InternalServerError, MethodNotAllowedError } from "infra/errors.js";
-import { error } from "node:console";
 
 function onNoMatchHandler(request, response) {
   const publicErrorObject = new MethodNotAllowedError(); // Cria um erro de método não permitido
