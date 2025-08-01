@@ -54,7 +54,6 @@ import migrationRunner from "node-pg-migrate";
 import { resolve } from "node:path";
 import database from "infra/database.js";
 import controller from "infra/controller.js"; // Importa os manipuladores de erro e rota não encontrada
-import db from "node-pg-migrate/dist/db";
 
 const router = createRouter();
 
