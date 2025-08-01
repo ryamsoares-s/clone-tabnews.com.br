@@ -49,54 +49,62 @@
  *       405:
  *         description: Método não permitido.
  */
-
+import { createRouter } from "next-connect";
 import migrationRunner from "node-pg-migrate";
 import { resolve } from "node:path";
 import database from "infra/database.js";
+import controller from "infra/controller.js"; // Importa os manipuladores de erro e rota não encontrada
+import db from "node-pg-migrate/dist/db";
 
-export default async function migrations(request, response) {
-  const allowedMethods = ["GET", "POST"]; // Métodos permitidos para esta rota
-  if (!allowedMethods.includes(request.method)) {
-    return response.status(405).json({
-      error: `Method "${request.method}" Not Allowed`, // Mensagem de erro para método não permitido
-      allowedMethods: allowedMethods, // Lista de métodos permitidos
-    }); // Retorna 405 se o método não for permitido
-  }
+const router = createRouter();
 
+router.get(getHandler); // Define a rota GET para listar migrações pendentes
+router.post(postHandler); // Define a rota POST para executar migrações
+
+export default router.handler(controller.errorHandlers); // Exporta o manipulador de erros e rota não encontrada
+
+const defaultMigrationsOptions = {
+  dryRun: true, // define uma execução dry run(teste)
+  dir: resolve("infra", "migrations"), // Diretório onde as migrações estão localizadas
+  // O Join é usado para garantir que o caminho seja resolvido corretamente, independentemente do sistema operacional
+  direction: "up", // Direção da migração, "up" para aplicar as migrações
+  verbose: true, // Ativa o modo verboso para logs detalhados
+  migrationsTable: "pgmigrations", // Nome da tabela onde as migrações são registradas
+};
+
+async function getHandler(request, response) {
   let dbClient;
 
   try {
     dbClient = await database.getNewClient(); // Obtém um novo cliente de banco de dados
-    const defaultMigrationsOptions = {
-      dbClient: dbClient, // Cliente de banco de dados para executar as migrações
-      dryRun: true, // define uma execução dry run(teste)
-      dir: resolve("infra", "migrations"), // Diretório onde as migrações estão localizadas
-      // O Join é usado para garantir que o caminho seja resolvido corretamente, independentemente do sistema operacional
-      direction: "up", // Direção da migração, "up" para aplicar as migrações
-      verbose: true, // Ativa o modo verboso para logs detalhados
-      migrationsTable: "pgmigrations", // Nome da tabela onde as migrações são registradas
-    };
 
-    if (request.method === "GET") {
-      const pendingMigrations = await migrationRunner(defaultMigrationsOptions);
-      return response.status(200).json(pendingMigrations); // Retorna 200 OK com as migrações pendentes
-    }
-
-    if (request.method === "POST") {
-      const migratedMigrations = await migrationRunner({
-        ...defaultMigrationsOptions, // Copia as opções padrão
-        dryRun: false, // Define que a execução não será dry run, ou seja, as migrações serão aplicadas de fato
-      }); // Executa as migrações de fato, sem dry run
-
-      if (migratedMigrations.length > 0) {
-        return response.status(201).json(migratedMigrations); // Retorna 201 Created com as migrações aplicadas
-      }
-      return response.status(200).json(migratedMigrations); // Retorna 200 OK com as migrações pendentes
-    }
-  } catch (error) {
-    console.error(error); // Log de erro no console
-    throw error; // Lança o erro para ser tratado por um middleware de erro global
+    const pendingMigrations = await migrationRunner({
+      ...defaultMigrationsOptions,
+      dbClient, // Usa o cliente de banco de dados obtido
+    });
+    return response.status(200).json(pendingMigrations); // Retorna 200 OK com as migrações pendentes
   } finally {
-    await dbClient.end(); // Encerra a conexão com o banco de dados
+    await dbClient?.end();
+  }
+}
+
+async function postHandler(request, response) {
+  let dbClient;
+
+  try {
+    dbClient = await database.getNewClient(); // Obtém um novo cliente de banco de dados
+
+    const migratedMigrations = await migrationRunner({
+      ...defaultMigrationsOptions, // Copia as opções padrão
+      dbClient, // Usa o cliente de banco de dados obtido
+      dryRun: false, // Define que a execução não será dry run, ou seja, as migrações serão aplicadas de fato
+    });
+
+    if (migratedMigrations.length > 0) {
+      return response.status(201).json(migratedMigrations); // Retorna 201 Created com as migrações aplicadas
+    }
+    return response.status(200).json(migratedMigrations); // Retorna 200 OK com as migrações pendentes
+  } finally {
+    await dbClient?.end();
   }
 }
