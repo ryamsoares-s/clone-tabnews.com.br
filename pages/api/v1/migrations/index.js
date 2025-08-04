@@ -50,10 +50,8 @@
  *         description: Método não permitido.
  */
 import { createRouter } from "next-connect";
-import migrationRunner from "node-pg-migrate";
-import { resolve } from "node:path";
-import database from "infra/database.js";
 import controller from "infra/controller.js"; // Importa os manipuladores de erro e rota não encontrada
+import migrator from "models/migrator.js"; // Importa o modelo de migração
 
 const router = createRouter();
 
@@ -62,48 +60,17 @@ router.post(postHandler); // Define a rota POST para executar migrações
 
 export default router.handler(controller.errorHandlers); // Exporta o manipulador de erros e rota não encontrada
 
-const defaultMigrationsOptions = {
-  dryRun: true, // define uma execução dry run(teste)
-  dir: resolve("infra", "migrations"), // Diretório onde as migrações estão localizadas
-  // O Join é usado para garantir que o caminho seja resolvido corretamente, independentemente do sistema operacional
-  direction: "up", // Direção da migração, "up" para aplicar as migrações
-  verbose: true, // Ativa o modo verboso para logs detalhados
-  migrationsTable: "pgmigrations", // Nome da tabela onde as migrações são registradas
-};
-
 async function getHandler(request, response) {
-  let dbClient;
+  const pendingMigrations = await migrator.listPendingMigrations(); // Lista as migrações pendentes
 
-  try {
-    dbClient = await database.getNewClient(); // Obtém um novo cliente de banco de dados
-
-    const pendingMigrations = await migrationRunner({
-      ...defaultMigrationsOptions,
-      dbClient, // Usa o cliente de banco de dados obtido
-    });
-    return response.status(200).json(pendingMigrations); // Retorna 200 OK com as migrações pendentes
-  } finally {
-    await dbClient?.end();
-  }
+  return response.status(200).json(pendingMigrations); // Retorna 200 OK com as migrações pendentes
 }
 
 async function postHandler(request, response) {
-  let dbClient;
+  const migratedMigrations = await migrator.runPendingMigrations(); // Executa as migrações pendentes
 
-  try {
-    dbClient = await database.getNewClient(); // Obtém um novo cliente de banco de dados
-
-    const migratedMigrations = await migrationRunner({
-      ...defaultMigrationsOptions, // Copia as opções padrão
-      dbClient, // Usa o cliente de banco de dados obtido
-      dryRun: false, // Define que a execução não será dry run, ou seja, as migrações serão aplicadas de fato
-    });
-
-    if (migratedMigrations.length > 0) {
-      return response.status(201).json(migratedMigrations); // Retorna 201 Created com as migrações aplicadas
-    }
-    return response.status(200).json(migratedMigrations); // Retorna 200 OK com as migrações pendentes
-  } finally {
-    await dbClient?.end();
+  if (migratedMigrations.length > 0) {
+    return response.status(201).json(migratedMigrations); // Retorna 201 Created com as migrações aplicadas
   }
+  return response.status(200).json(migratedMigrations); // Retorna 200 OK com as migrações pendentes
 }
