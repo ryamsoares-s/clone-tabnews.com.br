@@ -1,7 +1,6 @@
 import migrationRunner from "node-pg-migrate";
 import { resolve } from "node:path";
 import database from "infra/database.js";
-import { log } from "node:console";
 
 const defaultMigrationsOptions = {
   dryRun: true, // define uma execução dry run(teste)
