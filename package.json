@@ -35,7 +35,8 @@
     "swagger-jsdoc": "6.2.8",
     "swagger-ui-express": "5.0.1",
     "swagger-ui-react": "^5.27.0",
-    "swr": "2.2.5"
+    "swr": "2.2.5",
+    "uuid": "11.1.0"
   },
   "devDependencies": {
     "@commitlint/cli": "19.8.1",
