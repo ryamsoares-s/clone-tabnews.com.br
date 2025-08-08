@@ -1,4 +1,4 @@
-import { version as uuidVersionn } from "uuid";
+import { version as uuidVersion } from "uuid";
 import orchestrator from "tests/orchestrator.js";
 
 beforeAll(async () => {
@@ -34,7 +34,7 @@ describe("POST /api/v1/users", () => {
         updated_at: responseBody.updated_at,
       });
 
-      expect(uuidVersionn(responseBody.id)).toBe(4); // Verifica se o ID é um UUID v4
+      expect(uuidVersion(responseBody.id)).toBe(4); // Verifica se o ID é um UUID v4
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
     });
