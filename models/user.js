@@ -47,7 +47,7 @@ async function create(userInputValues) {
       FROM 
         users 
       WHERE 
-        LOWER(username) = LOWER($1)
+        unaccent(LOWER(username)) = unaccent(LOWER($1))
       ;`,
       values: [username],
     });

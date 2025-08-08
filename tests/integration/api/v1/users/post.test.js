@@ -4,6 +4,7 @@ import orchestrator from "tests/orchestrator.js";
 beforeAll(async () => {
   await orchestrator.waitForAllServices(); // Aguarda todos os serviços necessários estarem prontos antes de iniciar os testes
   await orchestrator.clearDatabase(); // Limpa o banco de dados antes de iniciar os testes
+  await orchestrator.setupDatabase(); // Configura o banco de dados, criando extensões necessárias
   await orchestrator.runPendingMigrations(); // Executa as migrações pendentes
 });
 
@@ -81,7 +82,7 @@ describe("POST /api/v1/users", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: "usernameDuplicado",
+          username: "Lívia",
           email: "usernameDuplicado1@gmail.com",
           password: "ryam123",
         }),
@@ -94,7 +95,7 @@ describe("POST /api/v1/users", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: "usernameDuplicado",
+          username: "Livia",
           email: "usernameDuplicado2@gmail.com",
           password: "ryam123",
         }),

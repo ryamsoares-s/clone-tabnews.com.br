@@ -4,6 +4,7 @@ import orchestrator from "tests/orchestrator.js";
 beforeAll(async () => {
   await orchestrator.waitForAllServices(); // Aguarda todos os serviços necessários estarem prontos antes de iniciar os testes
   await orchestrator.clearDatabase(); // Limpa o banco de dados antes de iniciar os testes
+  await orchestrator.setupDatabase(); // Configura o banco de dados, criando extensões necessárias
   await orchestrator.runPendingMigrations(); // Executa as migrações pendentes
 });
 

@@ -29,6 +29,10 @@ async function clearDatabase() {
   // Remove todo o schema 'public' (incluindo todas as tabelas e objetos) e recria o schema 'public' do zero no banco de dados
 }
 
+async function setupDatabase() {
+  await database.query("CREATE EXTENSION IF NOT EXISTS unaccent;"); // Cria a extensão 'unaccent' se ela não existir, para permitir consultas sem acentos
+}
+
 async function runPendingMigrations() {
   await migrator.runPendingMigrations();
 }
@@ -37,6 +41,7 @@ const orchestrator = {
   waitForAllServices, // Exporta a função para ser usada em outros arquivos
   clearDatabase, // Exporta a função para limpar o banco de dados
   runPendingMigrations, // Exporta a função para executar migrações pendentes
+  setupDatabase,
 };
 
 export default orchestrator;
