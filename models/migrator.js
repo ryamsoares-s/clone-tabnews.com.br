@@ -7,7 +7,7 @@ const defaultMigrationsOptions = {
   dir: resolve("infra", "migrations"), // Diretório onde as migrações estão localizadas
   // O Join é usado para garantir que o caminho seja resolvido corretamente, independentemente do sistema operacional
   direction: "up", // Direção da migração, "up" para aplicar as migrações
-  verbose: true, // Ativa o modo verboso para logs detalhados
+  log: () => {}, // Função de log que não faz nada
   migrationsTable: "pgmigrations", // Nome da tabela onde as migrações são registradas
 };
 
