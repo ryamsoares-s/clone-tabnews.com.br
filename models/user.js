@@ -40,6 +40,7 @@ async function create(userInputValues) {
   return newUser;
 
   async function validateUniqueUsername(username) {
+    await database.query("CREATE EXTENSION IF NOT EXISTS unaccent;"); // Remover do model em refatoração futura
     const results = await database.query({
       text: `
       SELECT 
