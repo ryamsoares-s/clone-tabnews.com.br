@@ -2,7 +2,7 @@ import retry from "async-retry"; // Importa a biblioteca para tentar executar fu
 import database from "infra/database.js"; // Importa o módulo de banco de dados para executar consultas SQL
 import migrator from "models/migrator";
 import user from "models/user.js";
-import { faker } from "@faker-js/faker/.";
+import { faker } from "@faker-js/faker";
 
 // Função principal que aguarda todos os serviços necessários estarem prontos
 async function waitForAllServices() {

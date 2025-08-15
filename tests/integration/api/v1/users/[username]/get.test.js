@@ -41,7 +41,7 @@ describe("GET /api/v1/users/[username]", () => {
       });
 
       const response2 = await fetch(
-        `http://localhost:3000/api/v1/users/CaseDiferente`,
+        `http://localhost:3000/api/v1/users/casediFerEnTE`,
       );
       expect(response2.status).toBe(200);
 
