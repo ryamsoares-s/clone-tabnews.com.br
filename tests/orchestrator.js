@@ -1,6 +1,8 @@
 import retry from "async-retry"; // Importa a biblioteca para tentar executar funções assíncronas várias vezes em caso de falha
 import database from "infra/database.js"; // Importa o módulo de banco de dados para executar consultas SQL
 import migrator from "models/migrator";
+import user from "models/user.js";
+import { faker } from "@faker-js/faker/.";
 
 // Função principal que aguarda todos os serviços necessários estarem prontos
 async function waitForAllServices() {
@@ -37,11 +39,21 @@ async function runPendingMigrations() {
   await migrator.runPendingMigrations();
 }
 
+async function createUser(userObject) {
+  return await user.create({
+    username:
+      userObject?.username || faker.internet.username().replace(/[_.-]/g, ""),
+    email: userObject?.email || faker.internet.email(),
+    password: userObject?.password || "validpassword",
+  });
+}
+
 const orchestrator = {
   waitForAllServices, // Exporta a função para ser usada em outros arquivos
   clearDatabase, // Exporta a função para limpar o banco de dados
   runPendingMigrations, // Exporta a função para executar migrações pendentes
   setupDatabase,
+  createUser,
 };
 
 export default orchestrator;
