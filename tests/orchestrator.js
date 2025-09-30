@@ -5,9 +5,12 @@ import user from "models/user.js";
 import { faker } from "@faker-js/faker";
 import session from "models/session";
 
+const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
+
 // Função principal que aguarda todos os serviços necessários estarem prontos
 async function waitForAllServices() {
   await waitForWebServer(); // Aguarda o servidor web estar disponível
+  await waitForEmailServer(); // Aguarda o servidor de email estar disponível
 
   // Função que aguarda o servidor web responder corretamente
   async function waitForWebServer() {
@@ -19,6 +22,20 @@ async function waitForAllServices() {
     // Função que faz uma requisição para o endpoint de status da API
     async function fetchStatusPage() {
       const response = await fetch("http://localhost:3000/api/v1/status"); // Faz uma requisição HTTP para o endpoint de status
+      if (response.status !== 200) {
+        throw Error();
+      }
+    }
+  }
+
+  async function waitForEmailServer() {
+    return retry(fetchEmailPage, {
+      retries: 100,
+      maxTimeout: 1000,
+    });
+
+    async function fetchEmailPage() {
+      const response = await fetch(emailHttpUrl);
       if (response.status !== 200) {
         throw Error();
       }
@@ -53,6 +70,27 @@ async function createSession(userId) {
   return await session.create(userId);
 }
 
+async function deleteAllEmails() {
+  await fetch(`${emailHttpUrl}/messages`, {
+    method: "DELETE",
+  });
+}
+
+async function getLastEmail() {
+  const emailListResponse = await fetch(`${emailHttpUrl}/messages`);
+  const emailListBody = await emailListResponse.json();
+  const lastEmailItem = emailListBody.pop();
+
+  const emailTextResponse = await fetch(
+    `${emailHttpUrl}/messages/${lastEmailItem.id}.plain`,
+  );
+  const emailTextBody = await emailTextResponse.text();
+
+  lastEmailItem.text = emailTextBody;
+
+  return lastEmailItem;
+}
+
 const orchestrator = {
   waitForAllServices, // Exporta a função para ser usada em outros arquivos
   clearDatabase, // Exporta a função para limpar o banco de dados
@@ -60,6 +98,8 @@ const orchestrator = {
   setupDatabase,
   createUser,
   createSession,
+  deleteAllEmails,
+  getLastEmail,
 };
 
 export default orchestrator;
